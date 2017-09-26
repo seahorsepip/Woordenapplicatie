@@ -37,6 +37,12 @@ public class Words {
         return collection;
     }
 
+    /**
+     * Get the number of words in a string
+     *
+     * @param text Text with the words to count
+     * @return The number of words counted
+     */
     public static int count(String text) {
         return stringToWords(new ArrayList<>(), text).size();
     }
@@ -45,6 +51,13 @@ public class Words {
         return stringToWords(new HashSet<>(), text).size();
     }
 
+
+    /**
+     * Get the number of unique words in a string
+     *
+     * @param text Text with the words to count
+     * @return The number of unique words counted
+     */
     public static Collection<String> sortReverse(String text) {
         Queue<String> queue = (Queue<String>) stringToWords(new PriorityQueue<>(Comparator.reverseOrder()), text);
         List<String> list = new ArrayList<>();
@@ -65,6 +78,12 @@ public class Words {
         return map;
     }
 
+    /**
+     * Get the unique words and their frequency in the text sorted in descending order
+     *
+     * @param text Text with words to analyse
+     * @return Map of unique words and their frequency in the text sorted in descending order
+     */
     public static Map<String, Integer> frequency(String text) {
         List<Map.Entry> list = new ArrayList<>(unsortedFrequency(text).entrySet());
         list.sort((o1, o2) -> ((Integer) o2.getValue()).compareTo((Integer) o1.getValue()));
@@ -75,6 +94,13 @@ public class Words {
         return map;
     }
 
+
+    /**
+     * Get the unique words and their frequency in the text sorted in descending order, using an alternative method
+     *
+     * @param text Text with words to analyse
+     * @return Map of unique words and their frequency in the text sorted in descending order
+     */
     public static Map<String, Integer> frequencyAlternative(String text) {
         Map<Integer, List<String>> valueKeyMap = new TreeMap<>(Comparator.reverseOrder());
         for (Map.Entry entry : unsortedFrequency(text).entrySet()) {
@@ -92,6 +118,12 @@ public class Words {
         return map;
     }
 
+    /**
+     * Get the words and their line numbers in the text
+     *
+     * @param text Text with words to analyse
+     * @return Map of the words and their line numbers in the text
+     */
     public static Map<String, Collection<Integer>> concordance(String text) {
         HashMap<String, Collection<Integer>> concordance = new HashMap<>();
         StringBuilder word = new StringBuilder();
