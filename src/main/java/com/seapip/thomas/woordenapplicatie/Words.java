@@ -66,30 +66,30 @@ public class Words {
     }
 
     public static Map<String, Integer> frequency(String text) {
-        List<Map.Entry> frequencyList = new ArrayList<>(unsortedFrequency(text).entrySet());
-        frequencyList.sort((o1, o2) -> ((Integer) o2.getValue()).compareTo((Integer) o1.getValue()));
+        List<Map.Entry> list = new ArrayList<>(unsortedFrequency(text).entrySet());
+        list.sort((o1, o2) -> ((Integer) o2.getValue()).compareTo((Integer) o1.getValue()));
 
-        Map<String, Integer> frequencySorted = new LinkedHashMap<>(frequencyList.size());
-        for (Map.Entry entry : frequencyList) frequencySorted.put((String) entry.getKey(), (Integer) entry.getValue());
+        Map<String, Integer> map = new LinkedHashMap<>(list.size());
+        for (Map.Entry entry : list) map.put((String) entry.getKey(), (Integer) entry.getValue());
 
-        return frequencySorted;
+        return map;
     }
 
     public static Map<String, Integer> frequencyAlternative(String text) {
-        Map<Integer, List<String>> frequencyValueKey = new TreeMap<>(Comparator.reverseOrder());
+        Map<Integer, List<String>> valueKeyMap = new TreeMap<>(Comparator.reverseOrder());
         for (Map.Entry entry : unsortedFrequency(text).entrySet()) {
             int value = (int) entry.getValue();
-            if (!frequencyValueKey.containsKey(value)) frequencyValueKey.put(value, new ArrayList<>());
-            frequencyValueKey.get(value).add((String) entry.getKey());
+            if (!valueKeyMap.containsKey(value)) valueKeyMap.put(value, new ArrayList<>());
+            valueKeyMap.get(value).add((String) entry.getKey());
         }
 
-        Map<String, Integer> frequencySorted = new LinkedHashMap<>();
-        for (Map.Entry entry : frequencyValueKey.entrySet()) {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        for (Map.Entry entry : valueKeyMap.entrySet()) {
             int value = (int) entry.getKey();
-            for (String word : (List<String>) entry.getValue()) frequencySorted.put(word, value);
+            for (String word : (List<String>) entry.getValue()) map.put(word, value);
         }
 
-        return frequencySorted;
+        return map;
     }
 
     public static Map<String, Collection<Integer>> concordance(String text) {
