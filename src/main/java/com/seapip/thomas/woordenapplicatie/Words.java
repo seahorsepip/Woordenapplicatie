@@ -33,6 +33,7 @@ public class Words {
                     break;
             }
         }
+
         return collection;
     }
 
@@ -47,22 +48,21 @@ public class Words {
     public static Collection<String> sortReverse(String text) {
         Queue<String> queue = (Queue<String>) stringToWords(new PriorityQueue<>(Comparator.reverseOrder()), text);
         List<String> list = new ArrayList<>();
+
         while (!queue.isEmpty()) {
             String word = queue.poll();
             if (!list.contains(word)) list.add(word);
         }
+
         return list;
     }
 
     private static Map<String, Integer> unsortedFrequency(String text) {
-        Collection<String> words = stringToWords(new ArrayList<>(), text);
-        Map<String, Integer> frequency = new HashMap<>();
+        Map<String, Integer> map = new HashMap<>();
 
-        for (String word : words) {
-            frequency.put(word, frequency.getOrDefault(word, 0) + 1);
-        }
+        for (String word : stringToWords(new ArrayList<>(), text)) map.put(word, map.getOrDefault(word, 0) + 1);
 
-        return frequency;
+        return map;
     }
 
     public static Map<String, Integer> frequency(String text) {
@@ -70,33 +70,23 @@ public class Words {
         frequencyList.sort((o1, o2) -> ((Integer) o2.getValue()).compareTo((Integer) o1.getValue()));
 
         Map<String, Integer> frequencySorted = new LinkedHashMap<>(frequencyList.size());
-        for (Map.Entry entry : frequencyList) {
-            frequencySorted.put((String) entry.getKey(), (Integer) entry.getValue());
-        }
+        for (Map.Entry entry : frequencyList) frequencySorted.put((String) entry.getKey(), (Integer) entry.getValue());
 
         return frequencySorted;
     }
 
     public static Map<String, Integer> frequencyAlternative(String text) {
-        Map<String, Integer> frequency = unsortedFrequency(text);
-
-        Map<Integer, List<String>> frequencyReverseKeyValueReverseSorted = new TreeMap<>(Comparator.reverseOrder());
-        for (Map.Entry entry : frequency.entrySet()) {
-            if (frequencyReverseKeyValueReverseSorted.containsKey(entry.getValue())) {
-                frequencyReverseKeyValueReverseSorted.get(entry.getValue()).add((String) entry.getKey());
-            } else {
-                List<String> values = new ArrayList<>();
-                values.add((String) entry.getKey());
-                frequencyReverseKeyValueReverseSorted.put((int) entry.getValue(), values);
-            }
+        Map<Integer, List<String>> frequencyValueKey = new TreeMap<>(Comparator.reverseOrder());
+        for (Map.Entry entry : unsortedFrequency(text).entrySet()) {
+            int value = (int) entry.getValue();
+            if (!frequencyValueKey.containsKey(value)) frequencyValueKey.put(value, new ArrayList<>());
+            frequencyValueKey.get(value).add((String) entry.getKey());
         }
 
-        Map<String, Integer> frequencySorted = new LinkedHashMap<>(frequency.size());
-        for (Map.Entry entry : frequencyReverseKeyValueReverseSorted.entrySet()) {
+        Map<String, Integer> frequencySorted = new LinkedHashMap<>();
+        for (Map.Entry entry : frequencyValueKey.entrySet()) {
             int value = (int) entry.getKey();
-            for (String word : (List<String>) entry.getValue()) {
-                frequencySorted.put(word, value);
-            }
+            for (String word : (List<String>) entry.getValue()) frequencySorted.put(word, value);
         }
 
         return frequencySorted;
@@ -114,14 +104,10 @@ public class Words {
                 case '.':
                 case '\n':
                 case '\r':
-                    if (character == '\n' || character == '\r') {
-                        row++;
-                    }
+                    if (character == '\n' || character == '\r') row++;
                     if (word.length() > 0) {
                         String string = word.toString();
-                        if (!concordance.containsKey(string)) {
-                            concordance.put(string, new ArrayList<>());
-                        }
+                        if (!concordance.containsKey(string)) concordance.put(string, new ArrayList<>());
                         concordance.get(string).add(row);
                         word = new StringBuilder();
                     }
@@ -131,6 +117,7 @@ public class Words {
                     break;
             }
         }
+
         return concordance;
     }
 }
